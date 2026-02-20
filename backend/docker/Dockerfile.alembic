@@ -1,0 +1,39 @@
+FROM python:3.12-slim
+
+# POSTGRES system dependencies
+RUN apt-get update \
+    && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /backend
+
+RUN pip install poetry
+
+COPY pyproject.toml poetry.lock* /backend/
+
+RUN poetry install --no-interaction --no-ansi
+
+COPY alembic.ini /backend/alembic.ini
+COPY alembic /backend/alembic
+COPY core /backend/core
+COPY db /backend/db
+
+ENV PYTHONPATH=/backend
+CMD ["/bin/sh", "-c", "\
+    echo 'Waiting for database at ${POSTGRES_HOST}:${POSTGRES_PORT}...' && \
+    RETRY_COUNT=0 && \
+    until pg_isready -h ${POSTGRES_HOST:-db} -p ${POSTGRES_PORT:-5432}; do \
+        RETRY_COUNT=$((RETRY_COUNT+1)); \
+        if [ $RETRY_COUNT -ge 30 ]; then \
+            echo 'Database not ready after 60 seconds. Exiting.' && \
+            exit 1; \
+        fi; \
+        echo \"Attempt $RETRY_COUNT/30 - Database not ready, retrying in 2s...\"; \
+        sleep 2; \
+    done && \
+    echo 'Database is ready! Running migrations...' && \
+    poetry run alembic upgrade head && \
+    echo 'Migrations completed successfully!'"]

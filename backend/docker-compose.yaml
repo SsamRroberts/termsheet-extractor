@@ -1,0 +1,64 @@
+services:
+  app:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.app
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=bluebridge
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - ENVIRONMENT=development
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    command:
+      [
+        "poetry",
+        "run",
+        "uvicorn",
+        "main:fastapp",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+      ]
+
+  # PostgreSQL
+  db:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=bluebridge
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Alembic Migrations (always runs)
+  alembic:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.alembic
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=bluebridge
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - ENVIRONMENT=development
+      - PYTHONPATH=/backend
+    depends_on:
+      - db
+
+  
+
+volumes:
+  postgres_data:

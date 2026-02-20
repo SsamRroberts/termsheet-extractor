@@ -1,0 +1,4 @@
+FROM postgres:14
+
+# Expose the default postgres port
+EXPOSE 5432

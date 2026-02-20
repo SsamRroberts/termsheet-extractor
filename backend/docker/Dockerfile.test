@@ -1,0 +1,42 @@
+# Use the official Python image from the Docker Hub
+FROM python:3.12-slim
+
+# Set environment variables
+ENV ENVIRONMENT=test
+ENV POETRY_VERSION=2.2.1
+ENV PATH="/root/.local/bin:$PATH"
+
+# POSTGRES system dependencies
+# build-essential for psycopg2
+# libpq-dev for pg_config
+RUN apt-get update \
+    && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Upgrade pip and install Poetry with dependencies
+RUN pip install --no-cache-dir --upgrade pip virtualenv
+RUN pip install --no-cache-dir poetry==${POETRY_VERSION}
+
+# Configure poetry to not create virtual environment
+RUN poetry config virtualenvs.create false
+
+# Set working directory in the container
+RUN mkdir /backend
+WORKDIR /backend
+
+# Copy poetry files first for better caching
+COPY pyproject.toml poetry.lock* /backend/
+
+# Install dependencies including dev dependencies
+RUN poetry install --with dev
+
+# Pin packaging after poetry install (dev dependencies upgrade it)
+RUN pip install --no-cache-dir --force-reinstall "packaging<25.0"
+
+# Copy the rest of your application code
+COPY . /backend/
+
+# Run tests
+CMD ["poetry", "run", "pytest", "-v"]
