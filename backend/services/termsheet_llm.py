@@ -365,7 +365,7 @@ def extract_termsheet_data(markdown_text: str) -> TermsheetData:
 
     logger.info("Invoking LLM agent...")
     t0 = time.monotonic()
-    result = agent.invoke({"messages": messages}, config={"recursion_limit": 30})
+    result = agent.invoke({"messages": messages}, config={"recursion_limit": 300})
     elapsed = time.monotonic() - t0
     logger.info("LLM agent returned in %.1fs", elapsed)
 
