@@ -5,7 +5,8 @@
 ### Install
 #### Prerequisites
 1. [Docker compose](https://docs.docker.com/compose/install/)
-2. Environment variables, use `./backend/.env.example` as a template for your `.env`
+2. Get an API key from [Synthetic](https://dev.synthetic.new/docs/api/models)
+3. Environment variables, use `./backend/.env.example` as a template for your `.env`
 #### Run
 1. `docker compose up --build`
 
