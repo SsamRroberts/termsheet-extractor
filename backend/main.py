@@ -1,11 +1,13 @@
 import json
 import logging
+import os
 import tomllib
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
 from core.config import settings
@@ -307,3 +309,36 @@ def get_product(product_isin: str, db: Session = Depends(get_db)):
             for e in sorted(product.events, key=lambda e: e.event_date)
         ],
     )
+
+
+# ---------------------------------------------------------------------------
+# Serve frontend build (must be AFTER all /api routes)
+# ---------------------------------------------------------------------------
+frontend_dist_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dist")
+
+if os.path.exists(frontend_dist_path):
+    assets_dir = os.path.join(frontend_dist_path, "assets")
+    if os.path.exists(assets_dir):
+        fastapp.mount(
+            "/assets", StaticFiles(directory=assets_dir), name="assets"
+        )
+
+
+@fastapp.get("/{full_path:path}")
+async def serve_spa(full_path: str):
+    """Serve the SPA for all non-API routes."""
+    if full_path.startswith("api/"):
+        raise HTTPException(status_code=404, detail="API endpoint not found")
+
+    # Serve static files directly if they exist in the dist folder
+    if "." in full_path:
+        file_path = os.path.join(frontend_dist_path, full_path)
+        if os.path.exists(file_path):
+            return FileResponse(file_path)
+
+    # For all other routes, serve index.html (SPA client-side routing)
+    index_path = os.path.join(frontend_dist_path, "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path)
+
+    raise HTTPException(status_code=404, detail="Frontend not found")
