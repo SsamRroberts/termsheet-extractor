@@ -47,18 +47,43 @@ services:
     build:
       context: .
       dockerfile: ./docker/Dockerfile.alembic
+    env_file:
+      - .env
     environment:
       - POSTGRES_HOST=db
-      - POSTGRES_PORT=5432
-      - POSTGRES_DB=bluebridge
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - ENVIRONMENT=development
       - PYTHONPATH=/backend
     depends_on:
       - db
 
-  
+  test:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.test
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_started
+      alembic:
+        condition: service_completed_successfully
+    environment:
+      - PYTHONPATH=/backend
+      - PYTEST_VERBOSE=${PYTEST_VERBOSE:-0}
+      - PYTEST_ARGS=${PYTEST_ARGS:-}
+    volumes:
+      - ../data:/data:ro
+    command: >
+      sh -c '
+      if [ "$$PYTEST_VERBOSE" = "2" ]; then
+        poetry run pytest -vv --tb=long -s $$PYTEST_ARGS
+      elif [ "$$PYTEST_VERBOSE" = "1" ]; then
+        poetry run pytest -v --tb=short $$PYTEST_ARGS
+      else
+        poetry run pytest -v $$PYTEST_ARGS
+      fi
+      '
+    profiles:
+      - test
 
 volumes:
   postgres_data:

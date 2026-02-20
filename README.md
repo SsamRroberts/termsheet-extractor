@@ -13,4 +13,4 @@
 1. Upload a PDF, view the extracted term sheet, hit approve to save.
 
 ### Test
-1. `docker compose up test --build`
+1. `docker compose --profile test up test --build`

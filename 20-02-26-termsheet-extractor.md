@@ -19,7 +19,7 @@
 
 1. PDF Extraction [pymupdf4llm](https://github.com/pymupdf/PyMuPDF4LLM) vs [pdfplummer](https://github.com/jsvine/pdfplumber). pymupdf4llm outputs markdown, which can be directly inputted into LLMs whereas pdfplumber exposes pdf objects which would require additional processing to build a extraction pipeline. However pymupdf4llm has an APGL hence, in production, a refactor to pdfplumber will be required to avoid copyleft.
 2. Usage of LLM. Allows me to reuse [code](https://github.com/SsamRroberts/49er) for structured output generation. Later in the project more deterministic extraction from pdfplumber objects could be implemented, but for now this is quick.
-3. 
+3. LLM - kimi-K2.5. Large context window for PDFs (example is 19270 chars).
 
 ## Context
 

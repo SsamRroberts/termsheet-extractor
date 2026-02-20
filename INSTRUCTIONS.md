@@ -51,7 +51,7 @@ You may use any commercial GPT/LLM of your choice to assist with extraction.
 * Python is required
 * Use PostgreSQL if possible
 * Keep the solution simple and pragmatic
-* No frontend UI required
+* No full frontend UI required
 * Time limit: ~3 hours
 * Please do not over-engineer
 
