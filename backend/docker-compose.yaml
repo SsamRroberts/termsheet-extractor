@@ -67,6 +67,8 @@ services:
       alembic:
         condition: service_completed_successfully
     environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
       - PYTHONPATH=/backend
       - PYTEST_VERBOSE=${PYTEST_VERBOSE:-0}
       - PYTEST_ARGS=${PYTEST_ARGS:-}

@@ -8,7 +8,7 @@ from db.models.event import Event
 from db.models.extraction_metadata import ExtractionMetadata
 from db.models.product import Product
 from db.models.underlying import Underlying
-from services.termsheet_llm import TermsheetData
+from schemas.termsheet import TermsheetData
 
 
 def persist_extraction(

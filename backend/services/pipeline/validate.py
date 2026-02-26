@@ -9,7 +9,7 @@ from typing import Literal
 from sqlalchemy.orm import Session
 
 from db.models.product import Product
-from services.termsheet_llm import TermsheetData
+from schemas.termsheet import TermsheetData
 
 
 @dataclass

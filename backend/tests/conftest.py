@@ -1,5 +1,6 @@
 """Shared fixtures: load Excel reference data into TermsheetData objects."""
 
+import os
 import sys
 from datetime import date, datetime
 from pathlib import Path
@@ -11,8 +12,7 @@ import pytest
 # Allow imports from the backend package
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from services.termsheet_llm import Event, Product, TermsheetData, Underlying
-from services.validation import ValidationResult, validate_termsheet
+from schemas.termsheet import Event, Product, TermsheetData, Underlying
 
 DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data"
 EXCEL_PATH = DATA_DIR / "XS3184638594_data tables.xlsx"

@@ -8,12 +8,13 @@ These tests verify:
   4. (Integration) LLM extraction from the markdown matches the Excel
 """
 
+import os
 from datetime import date
 
 import pytest
 
-from services.termsheet_llm import TermsheetData
-from services.validation import _check_isin_format, _check_isin_luhn, validate_termsheet
+from schemas.termsheet import TermsheetData
+from services.pipeline.validate import _check_isin_format, _check_isin_luhn, validate_termsheet
 
 # ── Expected constants (from the Excel) ───────────────────────────────────────
 
@@ -256,6 +257,10 @@ class TestValidation:
 
 
 @pytest.mark.integration
+@pytest.mark.skipif(
+    not os.environ.get("LLM_API_KEY"),
+    reason="LLM_API_KEY not set — skipping LLM integration tests",
+)
 class TestLLMExtractionAgainstExcel:
     """Run the actual LLM extraction on the markdown and compare to Excel.
 
@@ -263,7 +268,7 @@ class TestLLMExtractionAgainstExcel:
         pytest -m "not integration"
 
     Run explicitly:
-        pytest -m integration
+        LLM_API_KEY=... pytest -m integration
     """
 
     @pytest.fixture(autouse=True)
@@ -275,7 +280,7 @@ class TestLLMExtractionAgainstExcel:
     def extracted(self, markdown_text) -> TermsheetData | None:
         if markdown_text is None:
             return None
-        from services.termsheet_llm import extract_termsheet_data
+        from services.llm import extract_termsheet_data
 
         return extract_termsheet_data(markdown_text)
 
