@@ -1,0 +1,51 @@
+name: Backend Tests
+
+on:
+  push:
+    branches:
+      - "*"
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-tests.yml'
+  pull_request:
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-tests.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Set up Docker cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Set up Docker
+        run: sudo apt-get update && sudo apt-get install -y docker-compose
+
+      - name: Build Docker Images
+        run: |
+          ENVIRONMENT=test POSTGRES_PORT=5432 docker compose --profile test build
+
+      - name: Run Tests
+        run: |
+          sed -i 's/POSTGRES_HOST=localhost/POSTGRES_HOST=db/' .env.test
+          sed -i 's/POSTGRES_PORT=15432/POSTGRES_PORT=5432/' .env.test
+          ENVIRONMENT=test POSTGRES_PORT=5432 docker compose down --volumes
+          ENVIRONMENT=test POSTGRES_PORT=5432 docker compose --profile test up test --exit-code-from test
+          sed -i 's/POSTGRES_HOST=db/POSTGRES_HOST=localhost/' .env.test
+          sed -i 's/POSTGRES_PORT=5432/POSTGRES_PORT=15432/' .env.test
