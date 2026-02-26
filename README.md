@@ -1,6 +1,6 @@
 # Termsheet extractor
 
-This is a termsheet extractor demo using LLM tool-use to pull product data from varyingly formatted financial termsheet PDFs into a standardised PostgreSQL database. 
+This is a termsheet extractor demo using LLM tool-use to pull product data from variously formatted financial termsheet PDFs into a standardised PostgreSQL database. 
 
 The LLM is equipped with tools to search & read the document, and is guided through a multi-phase extraction protocol. The agent locates fields (ISIN, dates, underlyings, barrier levels, event schedules) by querying the document directly, grounding every extracted value in the source text. 
 
