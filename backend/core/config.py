@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     BLOBSTORE_PATH: str = "./blobstore"
 
     # LLM settings (OpenAI-compatible API)
-    LLM_API_KEY: str
+    LLM_API_KEY: str | None = None
     LLM_MODEL: str = "gpt-4o"
     LLM_API_URL: str | None = None
 

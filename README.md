@@ -4,7 +4,7 @@ This is a termsheet extractor demo using LLM tool-use to pull product data from 
 
 The LLM is equipped with tools to search & read the document, and is guided through a multi-phase extraction protocol. The agent locates fields (ISIN, dates, underlyings, barrier levels, event schedules) by querying the document directly, grounding every extracted value in the source text. 
 
-This tool-use approach significantly reduces hallucinations compared to one-shot extraction, and combined with schema validation and business rule checks catches ensures clean data.
+This tool-use approach significantly reduces hallucinations compared to one-shot extraction and combined with schema validation and business rule checks, ensures clean data.
 
 ### Examples
 
@@ -31,6 +31,9 @@ This tool-use approach significantly reduces hallucinations compared to one-shot
 2. `docker compose --profile test up test`
 
 ## Next Steps
+
+### SLDC
+- **Ticketing** - Introduce ticketing system & agile project management for prioritisation
 
 ### Optimisation
 - **Observability** - structured logging, tracing per agent run, token/cost metrics
