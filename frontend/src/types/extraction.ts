@@ -1,5 +1,34 @@
 /** Mirrors backend schemas for the extraction pipeline. */
 
+export interface ProductSummary {
+  product_isin: string
+  sedol: string | null
+  short_description: string | null
+  issuer: string | null
+  issue_date: string
+  currency: string
+  maturity: string
+  product_type: string | null
+  approved: boolean
+  underlying_count: number
+  event_count: number
+}
+
+export interface ProductDetail {
+  product_isin: string
+  sedol: string | null
+  short_description: string | null
+  issuer: string | null
+  issue_date: string
+  currency: string
+  maturity: string
+  product_type: string | null
+  word_description: string | null
+  approved: boolean
+  underlyings: Underlying[]
+  events: Event[]
+}
+
 export interface Underlying {
   bbg_code: string
   weight: number | null
@@ -7,7 +36,7 @@ export interface Underlying {
 }
 
 export interface Event {
-  event_type: 'coupon' | 'auto_early_redemption' | 'knock_in' | 'final_redemption'
+  event_type: 'strike' | 'coupon' | 'auto_early_redemption' | 'knock_in' | 'final_redemption'
   event_level_pct: number | null
   event_strike_pct: number | null
   event_date: string

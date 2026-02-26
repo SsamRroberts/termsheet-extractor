@@ -6,9 +6,26 @@ import ApprovalConfirmation from '@/components/ApprovalConfirmation'
 import ErrorDisplay from '@/components/ErrorDisplay'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
+import { useEffect, useRef } from 'react'
 
-export default function TermsheetPipeline() {
+interface TermsheetPipelineProps {
+  onComplete?: () => void
+}
+
+export default function TermsheetPipeline({ onComplete }: TermsheetPipelineProps) {
   const { state, handleFile, handleApprove, handleReset } = useExtractionPipeline()
+  const notifiedRef = useRef(false)
+
+  // Notify parent when extraction reaches review or approved state (product saved to DB)
+  useEffect(() => {
+    if ((state.phase === 'review' || state.phase === 'approved') && !notifiedRef.current) {
+      notifiedRef.current = true
+      onComplete?.()
+    }
+    if (state.phase === 'idle') {
+      notifiedRef.current = false
+    }
+  }, [state.phase, onComplete])
 
   switch (state.phase) {
     case 'idle':

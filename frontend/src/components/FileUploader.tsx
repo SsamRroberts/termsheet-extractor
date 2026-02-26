@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState, type DragEvent } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Upload } from 'lucide-react'
 
 interface FileUploaderProps {
   onFile: (file: File) => void
@@ -61,26 +62,11 @@ export default function FileUploader({ onFile, disabled }: FileUploaderProps) {
           onDragLeave={onDragLeave}
           className={`flex flex-col items-center justify-center gap-4 rounded-lg border-2 border-dashed p-10 transition-colors ${
             dragOver
-              ? 'border-primary bg-primary/5'
-              : 'border-muted-foreground/25'
+              ? 'border-primary bg-primary/10'
+              : 'border-white/15 hover:border-white/25'
           }`}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="48"
-            height="48"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="text-muted-foreground"
-          >
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="17 8 12 3 7 8" />
-            <line x1="12" x2="12" y1="3" y2="15" />
-          </svg>
+          <Upload className="h-12 w-12 text-muted-foreground" strokeWidth={1.5} />
 
           <div className="text-center">
             <p className="text-sm text-muted-foreground">

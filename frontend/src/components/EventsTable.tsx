@@ -15,6 +15,7 @@ interface EventsTableProps {
 }
 
 const TYPE_LABELS: Record<string, string> = {
+  strike: 'Strike',
   coupon: 'Coupon',
   auto_early_redemption: 'Auto Early Redemption',
   knock_in: 'Knock-In',

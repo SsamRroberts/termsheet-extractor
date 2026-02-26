@@ -12,10 +12,10 @@ export default function ValidationResults({ validation }: ValidationResultsProps
 
   if (validation.is_valid && warnings.length === 0) {
     return (
-      <Alert className="border-green-200 bg-green-50 text-green-800">
-        <CheckCircle className="h-4 w-4 text-green-600" />
+      <Alert className="border-teal/30 bg-teal/10 text-teal">
+        <CheckCircle className="h-4 w-4 text-teal" />
         <AlertTitle>Validation passed</AlertTitle>
-        <AlertDescription>All business rules passed successfully.</AlertDescription>
+        <AlertDescription className="text-teal/80">All business rules passed successfully.</AlertDescription>
       </Alert>
     )
   }
@@ -37,10 +37,10 @@ export default function ValidationResults({ validation }: ValidationResultsProps
       )}
 
       {warnings.length > 0 && (
-        <Alert className="border-yellow-200 bg-yellow-50 text-yellow-800">
-          <AlertTriangle className="h-4 w-4 text-yellow-600" />
+        <Alert className="border-amber/30 bg-amber/10 text-amber">
+          <AlertTriangle className="h-4 w-4 text-amber" />
           <AlertTitle>Warnings ({warnings.length})</AlertTitle>
-          <AlertDescription>
+          <AlertDescription className="text-amber/80">
             <ul className="mt-1 list-disc pl-4 space-y-1">
               {warnings.map((issue, i) => (
                 <li key={i}>{issue.message}</li>
@@ -51,10 +51,10 @@ export default function ValidationResults({ validation }: ValidationResultsProps
       )}
 
       {validation.is_valid && errors.length === 0 && (
-        <Alert className="border-green-200 bg-green-50 text-green-800">
-          <CheckCircle className="h-4 w-4 text-green-600" />
+        <Alert className="border-teal/30 bg-teal/10 text-teal">
+          <CheckCircle className="h-4 w-4 text-teal" />
           <AlertTitle>Validation passed</AlertTitle>
-          <AlertDescription>All business rules passed (with warnings above).</AlertDescription>
+          <AlertDescription className="text-teal/80">All business rules passed (with warnings above).</AlertDescription>
         </Alert>
       )}
     </div>

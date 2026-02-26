@@ -15,7 +15,7 @@ export default function ApprovalConfirmation({
   return (
     <Card className="w-full">
       <CardContent className="flex flex-col items-center gap-4 py-8">
-        <CheckCircle className="h-12 w-12 text-green-600" />
+        <CheckCircle className="h-12 w-12 text-teal" />
         <div className="text-center space-y-1">
           <h2 className="text-lg font-semibold">Product Approved</h2>
           <p className="text-sm text-muted-foreground">
